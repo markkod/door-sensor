@@ -33,12 +33,15 @@ class MainActivity : AppCompatActivity() {
 
 
     fun addDoorToList(door: Door) {
+        // TODO: add to firestore as well -> how do we "connect" the new adapter?
         doorsList.add(door)
         myCustomAdapter.notifyDataSetChanged()
     }
 
 
     private fun getDoors() {
+        // TODO: fetch door list from repo -> how do we add new doors? do we implement this or
+        // just add it to the report as a potential future development thing
 
         // For developing create some dummy door components
         // TODO: Delete later

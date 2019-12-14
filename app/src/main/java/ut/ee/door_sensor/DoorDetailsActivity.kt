@@ -21,6 +21,8 @@ class DoorDetailsActivity : AppCompatActivity() {
         addDoorDetails(door!!)
 
         details_view_stats.setOnClickListener {
+            // TODO will the chart just be a histogram of "most active" times of the day
+            // i.e. a bar for every two hours of the day
 //            startStatisticsActivity()
         }
 
