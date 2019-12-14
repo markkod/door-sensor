@@ -6,10 +6,9 @@
     <TextView
         android:id="@+id/door_name_textView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:text="Test" />
+        android:text="@string/door_name" />
 
 
 </LinearLayout>

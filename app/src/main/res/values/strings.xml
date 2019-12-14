@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">door_sensor</string>
+    <string name="door_name">Test</string>
 </resources>

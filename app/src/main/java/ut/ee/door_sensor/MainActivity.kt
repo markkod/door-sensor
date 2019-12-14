@@ -16,25 +16,25 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //requestPermissions?
 
         initialiseDoorsList()
         getDoors()
     }
 
-    fun initialiseDoorsList() {
+    private fun initialiseDoorsList() {
         myCustomAdapter = CustomAdapter(doorsList, this)
         doors_listview.adapter = myCustomAdapter
     }
 
 
     fun addDoorToList(door: Door) {
-
         doorsList.add(door)
         myCustomAdapter.notifyDataSetChanged()
     }
 
 
-    fun getDoors() {
+    private fun getDoors() {
 
         // For developing create some dummy door components
         // TODO: Delete later
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             val dateTime: String = formatedDate.toString()
             var lastOpenedArray: Array<String> = arrayOf(dateTime)
 
-            door.id = i.toString()
+            door.id = i.toLong()
             door.isOpenState = true
             door.name = "Door".plus(i.toString())
             door.lastOpened = lastOpenedArray

@@ -1,21 +1,25 @@
 package ut.ee.door_sensor
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.TextView
 import kotlinx.android.synthetic.main.custom_list_item.view.*
 
 class CustomAdapter(var objects: MutableList<Door>, var mainActivity: MainActivity) :
     BaseAdapter() {
+
+    private val TAG = "Adapter"
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
 
-        if (convertView == null) {
+        view = if (convertView == null) {
             val layoutInflater = LayoutInflater.from(parent?.context)
-            view = layoutInflater.inflate(R.layout.custom_list_item, parent, false)
+            layoutInflater.inflate(R.layout.custom_list_item, parent, false)
         } else {
-            view = convertView
+            convertView
         }
 
         val door = getItem(position)
@@ -25,9 +29,9 @@ class CustomAdapter(var objects: MutableList<Door>, var mainActivity: MainActivi
         }
 
 
-        view.setOnClickListener() {
+//        view.setOnClickListener() {
             // mainActivity.openDetailsActivity(door, position);
-        }
+//        }
 
         return view
     }
