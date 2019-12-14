@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="DoorDetailsActivity">
+
+    <TextView
+        android:id="@+id/details_door_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:text="@string/details_door_name"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <TextView
+        android:id="@+id/details_is_open_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/details_door_state"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TextView
+        android:id="@+id/details_state_changes_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/door_state_changed_times"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/details_state_changes"
+        android:layout_width="match_parent"
+        android:layout_height="334dp"
+        android:padding="10dp"
+        android:text="@string/last_state_changes"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/details_view_stats"
+        android:layout_width="match_parent"
+        android:layout_height="79dp"
+        android:text="@string/details_view_statistics" />
+
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:text="@string/back" />
+</LinearLayout>

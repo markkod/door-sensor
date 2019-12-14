@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">door_sensor</string>
     <string name="door_name">Test</string>
+    <string name="back">Back</string>
+    <string name="details_door_name">DOOR NAME</string>
+    <string name="details_view_statistics">VIEW STATISTICS</string>
+    <string name="details_door_state">Current door state</string>
+    <string name="last_state_changes">last state changes</string>
+    <string name="door_state_changed_times">Door state changed times:</string>
 </resources>

@@ -1,16 +1,21 @@
 package ut.ee.door_sensor
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    var doorsList: MutableList<Door> = mutableListOf()
+    private val TAG = "MainActivity"
 
+    var doorsList: MutableList<Door> = mutableListOf()
     lateinit var myCustomAdapter: CustomAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,5 +63,14 @@ class MainActivity : AppCompatActivity() {
 
             addDoorToList(door)
         }
+    }
+
+    fun startDetailsActivity(door: Door, position: Int) {
+        val intent = Intent(this, DoorDetailsActivity::class.java)
+        val doorJson = Gson().toJson(door)
+        Log.i(TAG, "Sending door info to details activity: $doorJson")
+        intent.putExtra("door", doorJson)
+        intent.putExtra("position", position)
+        startActivity(intent)
     }
 }
