@@ -6,14 +6,15 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.custom_list_item.view.*
 
-class CustomAdapter(var objects: MutableList<Door>, var mainActivity: MainActivity) : BaseAdapter() {
+class CustomAdapter(var objects: MutableList<Door>, var mainActivity: MainActivity) :
+    BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
 
         if (convertView == null) {
             val layoutInflater = LayoutInflater.from(parent?.context)
             view = layoutInflater.inflate(R.layout.custom_list_item, parent, false)
-        } else{
+        } else {
             view = convertView
         }
 
