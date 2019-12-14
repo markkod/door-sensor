@@ -23,13 +23,13 @@ class MainActivity : AppCompatActivity() {
 
     fun initialiseDoorsList() {
         myCustomAdapter = CustomAdapter(doorsList, this)
-        doors_listview.setAdapter(myCustomAdapter)
+        doors_listview.adapter = myCustomAdapter
     }
 
 
     fun addDoorToList(door: Door) {
 
-        doorsList?.add(door)
+        doorsList.add(door)
         myCustomAdapter.notifyDataSetChanged()
     }
 
