@@ -4,12 +4,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
@@ -72,5 +71,66 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("door", doorJson)
         intent.putExtra("position", position)
         startActivity(intent)
+    }
+
+    /**
+     * Dummy function containing Firestore code snippets from setup
+     */
+    fun firestore() {
+        val db = FirebaseFirestore.getInstance()
+        // Create a new user with a first and last name
+        val user1 = hashMapOf<String, Any>()
+        user1["first"] = "Ada"
+        user1["last"] = "Lovelace"
+        user1["born"] = 1815
+
+
+        /**
+         * Adding data
+         */
+
+        // Add a new document with a generated ID
+        db.collection("users")
+            .add(user1)
+            .addOnSuccessListener { documentReference ->
+                Log.d(
+                    TAG,
+                    "DocumentSnapshot added with ID: " + documentReference.id
+                )
+            }
+            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+
+        // Create a new user with a first, middle, and last name
+        val user2 = hashMapOf<String, Any>()
+        user2["first"] = "Alan"
+        user2["middle"] = "Mathison"
+        user2["last"] = "Turing"
+        user2["born"] = 1912
+
+        // Add a new document with a generated ID
+        db.collection("users")
+            .add(user2)
+            .addOnSuccessListener { documentReference ->
+                Log.d(
+                    TAG,
+                    "DocumentSnapshot added with ID: " + documentReference.id
+                )
+            }
+            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+
+        /**
+         * Read data
+         */
+        db.collection("users")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result!!) {
+                        Log.d(TAG, document.id + " => " + document.data)
+                    }
+                } else {
+                    Log.w(TAG, "Error getting documents.", task.exception)
+                }
+            }
     }
 }
