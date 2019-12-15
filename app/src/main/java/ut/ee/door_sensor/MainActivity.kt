@@ -1,7 +1,5 @@
 package ut.ee.door_sensor
 
-import android.app.Activity
-import android.content.ClipData
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,8 +7,6 @@ import android.util.Log
 import android.view.Menu
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
-import java.text.SimpleDateFormat
-import java.util.*
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
@@ -20,15 +16,16 @@ class MainActivity : AppCompatActivity() {
     var doorsList: MutableList<Door> = mutableListOf()
     lateinit var myCustomAdapter: CustomAdapter
     var notificationsEnabled = true
+    lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //requestPermissions?
+        db = FirebaseFirestore.getInstance()
 
-        initialiseDoorsList()
         getDoors()
-        Log.i(TAG, "Notifications enabled: $notificationsEnabled")
+        initialiseDoorsList()
 
     }
 
@@ -60,41 +57,22 @@ class MainActivity : AppCompatActivity() {
         doors_listview.adapter = myCustomAdapter
     }
 
-
-    fun addDoorToList(door: Door) {
-        // TODO: add to firestore as well -> how do we "connect" the new adapter?
-        doorsList.add(door)
-        myCustomAdapter.notifyDataSetChanged()
-    }
-
-
+    /**
+     * TODO MOVE THIS ASYNCTASK, when it is in onCreate, then the response wont come fast enough and the items are not displayed
+     */
     private fun getDoors() {
-        // TODO: fetch door list from repo -> how do we add new doors? do we implement this or
-        // just add it to the report as a potential future development thing
-
-        // For developing create some dummy door components
-        // TODO: Delete later
-        for (i in 0..10) {
-            val door = Door()
-
-            val date = Calendar.getInstance().time
-            val formatter = SimpleDateFormat.getDateTimeInstance()
-            val formatedDate = formatter.format(date)
-
-
-            val dateTime: String = formatedDate.toString()
-            var lastOpenedArray: Array<String> = arrayOf(dateTime)
-
-            door.id = i.toLong()
-            door.isOpenState = true
-            door.name = "Door".plus(i.toString())
-            door.lastOpened = lastOpenedArray
-
-            Log.i("SIIN", "DOOR: ${door.name}")
-
-            addDoorToList(door)
-        }
+        db.collection("doors")
+            .get()
+            .addOnSuccessListener { doors ->
+                for (doorSnapshot in doors) {
+                    Log.i(TAG, "DOOR: $doorSnapshot")
+                    doorsList.add(doorSnapshot.toObject(Door::class.java))
+                    Log.i(TAG, "Doors: $doorsList")
+                }
+            }
     }
+
+
 
     fun startDetailsActivity(door: Door, position: Int) {
         val intent = Intent(this, DoorDetailsActivity::class.java)
