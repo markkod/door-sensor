@@ -7,4 +7,6 @@
     <string name="details_door_state">Current door state</string>
     <string name="last_state_changes">last state changes</string>
     <string name="door_state_changed_times">Door state changed times:</string>
+    <string name="settings">Settings</string>
+    <string name="notifications">Notifications</string>
 </resources>

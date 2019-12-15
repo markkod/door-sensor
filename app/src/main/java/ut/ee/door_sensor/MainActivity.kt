@@ -1,9 +1,12 @@
 package ut.ee.door_sensor
 
+import android.app.Activity
+import android.content.ClipData
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
@@ -16,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     var doorsList: MutableList<Door> = mutableListOf()
     lateinit var myCustomAdapter: CustomAdapter
+    var notificationsEnabled = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +28,32 @@ class MainActivity : AppCompatActivity() {
 
         initialiseDoorsList()
         getDoors()
+        Log.i(TAG, "Notifications enabled: $notificationsEnabled")
+
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.settings, menu)
+
+        val settings = menu?.findItem(R.id.menu_settings)
+        settings?.setOnMenuItemClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            intent.putExtra("notifications_enabled", notificationsEnabled)
+            startActivityForResult(intent, 1)
+            true
+        }
+
+        return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            notificationsEnabled = data!!.getBooleanExtra("notifications_enabled", true)
+            Log.i(TAG, "Notifications enabled: $notificationsEnabled")
+        }
+    }
+
 
     private fun initialiseDoorsList() {
         myCustomAdapter = CustomAdapter(doorsList, this)

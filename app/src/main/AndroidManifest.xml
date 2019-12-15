@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DoorDetailsActivity" />
+        <activity android:name=".SettingsActivity" />
 
         <service android:name=".MessagingService">
             <intent-filter>
