@@ -35,7 +35,7 @@ class DoorDetailsActivity : AppCompatActivity() {
         val intent = Intent(this, DoorStatisticsActivity::class.java)
         val doorJson = Gson().toJson(door)
         Log.i(TAG, "Sending door info to statistics activity: $doorJson")
-        
+
         intent.putExtra("door", doorJson)
         intent.putExtra("position", position)
         startActivity(intent)

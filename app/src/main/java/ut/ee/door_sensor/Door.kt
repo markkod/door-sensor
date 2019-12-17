@@ -1,7 +1,6 @@
 package ut.ee.door_sensor
 
 import java.util.*
-import kotlin.collections.ArrayList
 
 class Door(
     var id: Long? = null,

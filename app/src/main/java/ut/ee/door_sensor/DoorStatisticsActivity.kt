@@ -5,6 +5,15 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.door_statistics.*
+import java.util.*
+import android.webkit.WebSettings
+import com.anychart.AnyChartView
+import android.R.attr.data
+import com.anychart.chart.common.dataentry.ValueDataEntry
+import com.anychart.chart.common.dataentry.DataEntry
+import com.anychart.AnyChart
+import java.text.SimpleDateFormat
+
 
 class DoorStatisticsActivity : AppCompatActivity() {
 
@@ -36,10 +45,37 @@ class DoorStatisticsActivity : AppCompatActivity() {
     private fun addDoorDetails(door: Door) {
         if (door != null) {
             statistics_door_name.text = door.name
-
-            // TODO: will the chart just be a histogram of "most active" times of the day
-            // i.e. a bar for every two hours of the day
+            loadChart()
         }
+    }
+
+    private fun loadChart() {
+        val column = AnyChart.column()
+        val data: MutableList<DataEntry> = mutableListOf()
+
+        var temporaryArray: MutableList<Any> = mutableListOf()
+
+
+        var timestampArray: MutableList<Long> = mutableListOf()
+        timestampArray.addAll(door?.lastOpened!!.values)
+
+        for (ts in timestampArray) {
+            val sdf = SimpleDateFormat("yyyy-MM-dd")
+            val date = Date(ts*1000)
+            val formattedDate = sdf.format(date)
+
+            temporaryArray.add(formattedDate)
+        }
+
+        for (date in temporaryArray) {
+            val count = temporaryArray.count { it == date }
+            Log.i(TAG, "Formatted date, count: $date + $count")
+            data.add(ValueDataEntry(date.toString(), count))
+        }
+
+
+        column.data(data)
+        statistics_chart.setChart(column)
     }
 
 
