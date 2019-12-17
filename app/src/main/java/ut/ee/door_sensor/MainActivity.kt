@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,19 +25,20 @@ class MainActivity : AppCompatActivity() {
 
     var doorsList: MutableList<Door> = mutableListOf()
     lateinit var myCustomAdapter: CustomAdapter
-    private var notificationsEnabled = true
-    private lateinit var db: DatabaseReference
+    var notificationsEnabled: Boolean = true
+    private lateinit var db: FirebaseDatabase
+    private lateinit var doorsDb: DatabaseReference
+    private lateinit var notificationsDb: FirebaseFirestore
     private lateinit var broadcastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //requestPermissions?
-        db = FirebaseDatabase.getInstance().getReference("doors")
+        initDb()
+        fetchDbData()
         initBroadcastReceiver()
-
-        getDoors()
-        initialiseDoorsList()
+        initDoorsList()
     }
 
     override fun onDestroy() {
@@ -63,9 +65,39 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
-            notificationsEnabled = data!!.getBooleanExtra("notifications_enabled", true)
+            val newNotificationState = data!!.getBooleanExtra("notifications_enabled", true)
+
+            if (newNotificationState != notificationsEnabled) {
+                Log.i(TAG, "New notifications state: $newNotificationState")
+                updateNotificationStateInDb(newNotificationState)
+            }
             Log.i(TAG, "Notifications enabled: $notificationsEnabled")
+
         }
+    }
+
+    private fun updateNotificationStateInDb(newNotificationState: Boolean) {
+        Log.i(TAG, "Updating notifications state in DB to: $newNotificationState")
+        notificationsEnabled = newNotificationState
+
+        if (newNotificationState) {
+            notificationsDb
+                .collection("notifications")
+                .document("state")
+                .set(mapOf("enabled" to "true"))
+        } else {
+            notificationsDb
+                .collection("notifications")
+                .document("state")
+                .set(mapOf("enabled" to "false"))
+        }
+    }
+
+
+    private fun initDb() {
+        db = FirebaseDatabase.getInstance()
+        doorsDb = db.getReference("doors")
+        notificationsDb = FirebaseFirestore.getInstance()
     }
 
     private fun initBroadcastReceiver() {
@@ -85,15 +117,19 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun initialiseDoorsList() {
+    private fun initDoorsList() {
         myCustomAdapter = CustomAdapter(doorsList, this)
         doors_listview.adapter = myCustomAdapter
     }
 
+    private fun fetchDbData() {
+        fetchDoors()
+        fetchNotificationsState()
+    }
 
-    private fun getDoors() {
+    private fun fetchDoors() {
         // Read from the database
-        db.addValueEventListener(object : ValueEventListener {
+        doorsDb.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // This method is called once with the initial value and again
@@ -114,6 +150,20 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+    private fun fetchNotificationsState() {
+        val documentReference = notificationsDb.collection("notifications")
+            .document("state")
+       documentReference.get().addOnSuccessListener { document ->
+           setNotificationsState(document.data!!["enabled"].toString())
+       }
+    }
+
+    private fun setNotificationsState(state: String) {
+        Log.i(TAG, "Notifications state from DB: $state")
+        notificationsEnabled = state == "true"
+    }
+
 
 
     fun startDetailsActivity(door: Door, position: Int) {
