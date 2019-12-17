@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "921772010269",
+    "firebase_url": "https://doorsensor-88fe4.firebaseio.com",
+    "project_id": "doorsensor-88fe4",
+    "storage_bucket": "doorsensor-88fe4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921772010269:android:2b942693d4e2987d4d4ff4",
+        "android_client_info": {
+          "package_name": "ut.ee.door_sensor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "921772010269-f191lsrpqojf9js3h673aa8f1hfg0i7h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ut.ee.door_sensor",
+            "certificate_hash": "db3b78dc091392f62cc783c3e5be4070e3ab47ff"
+          }
+        },
+        {
+          "client_id": "921772010269-5cnjv6voc760gn4ibfgiva7rpc5knlia.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ut.ee.door_sensor",
+            "certificate_hash": "3a826775d542451d732f0a9d0ec563a066ce9967"
+          }
+        },
+        {
+          "client_id": "921772010269-tjtvbu6sb4gqs30vbjffdrm1kspemebq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgQUsD--kRVqVnjQxzrdiiHI_0zQkpWNw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "921772010269-tjtvbu6sb4gqs30vbjffdrm1kspemebq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

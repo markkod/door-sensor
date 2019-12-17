@@ -8,6 +8,11 @@ import android.view.Menu
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,13 +21,13 @@ class MainActivity : AppCompatActivity() {
     var doorsList: MutableList<Door> = mutableListOf()
     lateinit var myCustomAdapter: CustomAdapter
     var notificationsEnabled = true
-    lateinit var db: FirebaseFirestore
+    lateinit var db: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //requestPermissions?
-        db = FirebaseFirestore.getInstance()
+        db = FirebaseDatabase.getInstance().getReference("doors")
 
         getDoors()
         initialiseDoorsList()
@@ -61,17 +66,27 @@ class MainActivity : AppCompatActivity() {
      * TODO MOVE THIS ASYNCTASK, when it is in onCreate, then the response wont come fast enough and the items are not displayed
      */
     private fun getDoors() {
-        db.collection("doors")
-            .get()
-            .addOnSuccessListener { doors ->
-                for (doorSnapshot in doors) {
-                    Log.i(TAG, "DOOR: $doorSnapshot")
-                    doorsList.add(doorSnapshot.toObject(Door::class.java))
-                    Log.i(TAG, "Doors: $doorsList")
-                }
-            }
-    }
+        // Read from the database
+        db.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                Log.i(TAG, "onDataChange!")
 
+                for (ds in dataSnapshot.children) {
+                    val door = ds.getValue(Door::class.java!!)
+                    doorsList.add(door as Door)
+                }
+                myCustomAdapter.notifyDataSetChanged()
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("Error", "Failed to read value.", error.toException())
+            }
+        })
+    }
 
 
     fun startDetailsActivity(door: Door, position: Int) {
