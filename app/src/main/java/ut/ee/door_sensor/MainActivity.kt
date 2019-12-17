@@ -20,8 +20,8 @@ class MainActivity : AppCompatActivity() {
 
     var doorsList: MutableList<Door> = mutableListOf()
     lateinit var myCustomAdapter: CustomAdapter
-    var notificationsEnabled = true
-    lateinit var db: DatabaseReference
+    private var notificationsEnabled = true
+    private lateinit var db: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
 
         getDoors()
         initialiseDoorsList()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

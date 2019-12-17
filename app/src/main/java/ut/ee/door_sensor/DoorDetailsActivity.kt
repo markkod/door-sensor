@@ -1,5 +1,6 @@
 package ut.ee.door_sensor
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -21,15 +22,23 @@ class DoorDetailsActivity : AppCompatActivity() {
         addDoorDetails(door!!)
 
         details_view_stats.setOnClickListener {
-            // TODO will the chart just be a histogram of "most active" times of the day
-            // i.e. a bar for every two hours of the day
-//            startStatisticsActivity()
+            startStatisticsActivity(door, position)
         }
 
         back_button.setOnClickListener {
             finish()
         }
 
+    }
+
+    private fun startStatisticsActivity(door: Door?, position: Int?) {
+        val intent = Intent(this, DoorStatisticsActivity::class.java)
+        val doorJson = Gson().toJson(door)
+        Log.i(TAG, "Sending door info to statistics activity: $doorJson")
+        
+        intent.putExtra("door", doorJson)
+        intent.putExtra("position", position)
+        startActivity(intent)
     }
 
     private fun addDoorDetails(door: Door) {

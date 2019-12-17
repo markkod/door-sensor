@@ -26,9 +26,8 @@ class CustomAdapter(var objects: MutableList<Door>, var mainActivity: MainActivi
             view.door_name_textView.text = door.name
         }
 
-
         view.setOnClickListener {
-             mainActivity.startDetailsActivity(door, position)
+            mainActivity.startDetailsActivity(door, position)
         }
 
         return view
