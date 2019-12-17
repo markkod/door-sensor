@@ -1,13 +1,17 @@
 package ut.ee.door_sensor
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.widget.Toast
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.DatabaseError
@@ -22,15 +26,24 @@ class MainActivity : AppCompatActivity() {
     lateinit var myCustomAdapter: CustomAdapter
     private var notificationsEnabled = true
     private lateinit var db: DatabaseReference
+    private lateinit var broadcastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //requestPermissions?
         db = FirebaseDatabase.getInstance().getReference("doors")
+        initBroadcastReceiver()
 
         getDoors()
         initialiseDoorsList()
+    }
+
+    override fun onDestroy() {
+        LocalBroadcastManager
+            .getInstance(this)
+            .unregisterReceiver(broadcastReceiver)
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -53,6 +66,22 @@ class MainActivity : AppCompatActivity() {
             notificationsEnabled = data!!.getBooleanExtra("notifications_enabled", true)
             Log.i(TAG, "Notifications enabled: $notificationsEnabled")
         }
+    }
+
+    private fun initBroadcastReceiver() {
+        broadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                Log.i(TAG, "RECEIVED BROADCAST")
+                if (notificationsEnabled) {
+                    val notificationText = intent?.getStringExtra("notification_text")
+                    Toast.makeText(applicationContext, notificationText, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
+        LocalBroadcastManager
+            .getInstance(this)
+            .registerReceiver(broadcastReceiver, IntentFilter("INTENT_FILTER"))
     }
 
 
