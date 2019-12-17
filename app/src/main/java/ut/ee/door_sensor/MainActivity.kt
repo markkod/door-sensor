@@ -73,7 +73,8 @@ class MainActivity : AppCompatActivity() {
                 Log.i(TAG, "onDataChange!")
 
                 for (ds in dataSnapshot.children) {
-                    val door = ds.getValue(Door::class.java!!)
+                    var door = ds.getValue(Door::class.java!!)
+
                     doorsList.add(door as Door)
                 }
                 myCustomAdapter.notifyDataSetChanged()
