@@ -6,9 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.door_statistics.*
 import java.util.*
-import android.webkit.WebSettings
-import com.anychart.AnyChartView
-import android.R.attr.data
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.AnyChart
@@ -61,8 +58,10 @@ class DoorStatisticsActivity : AppCompatActivity() {
 
         for (ts in timestampArray) {
             val sdf = SimpleDateFormat("yyyy-MM-dd")
-            val date = Date(ts*1000)
+            val date = Date(ts)
             val formattedDate = sdf.format(date)
+
+
 
             temporaryArray.add(formattedDate)
         }

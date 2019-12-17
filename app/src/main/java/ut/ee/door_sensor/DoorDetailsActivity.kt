@@ -3,9 +3,16 @@ package ut.ee.door_sensor
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Adapter
+import android.widget.ArrayAdapter
+import android.widget.ListAdapter
+import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.door_details.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DoorDetailsActivity : AppCompatActivity() {
 
@@ -13,6 +20,8 @@ class DoorDetailsActivity : AppCompatActivity() {
 
     private var door: Door? = null
     private var position: Int? = null
+
+    lateinit var adapter: ListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +40,33 @@ class DoorDetailsActivity : AppCompatActivity() {
 
     }
 
+    fun generateDateStrings(): Array<Any> {
+        var timestampArray: MutableList<Long> = mutableListOf()
+        timestampArray.addAll(door?.lastOpened!!.values)
+
+        var stringArray: MutableList<Any> = mutableListOf()
+
+        for (ts in timestampArray) {
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+            val date = Date(ts)
+            val formattedDate = sdf.format(date)
+
+            stringArray.add(formattedDate.toString())
+        }
+
+        return stringArray.toTypedArray()
+    }
+
+    private fun initialiseDoorsList() {
+
+        val datesArray = generateDateStrings()
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, datesArray)
+        details_state_changes_listView.adapter = adapter
+        adapter.notifyDataSetChanged()
+
+    }
+
     private fun startStatisticsActivity(door: Door?, position: Int?) {
         val intent = Intent(this, DoorStatisticsActivity::class.java)
         val doorJson = Gson().toJson(door)
@@ -44,7 +80,7 @@ class DoorDetailsActivity : AppCompatActivity() {
     private fun addDoorDetails(door: Door) {
         details_door_name.text = door.name
         details_is_open_state.text = door.deriveDoorStateText()
-        details_state_changes.text = "Here are previous state changes times...\n\n\n\n\n\n\n" //TODO
+        initialiseDoorsList()
     }
 
     private fun initTargetDoor() {

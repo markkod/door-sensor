@@ -1,56 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="DoorDetailsActivity">
 
     <TextView
         android:id="@+id/details_door_name"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:text="@string/details_door_name"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toTopOf="@+id/details_is_open_state"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/details_is_open_state"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="@string/details_door_state"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toTopOf="@+id/details_state_changes_header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_door_name" />
 
     <TextView
         android:id="@+id/details_state_changes_header"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="@string/door_state_changed_times"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/details_state_changes_listView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_is_open_state" />
 
-    <TextView
-        android:id="@+id/details_state_changes"
-        android:layout_width="match_parent"
-        android:layout_height="334dp"
-        android:padding="10dp"
-        android:text="@string/last_state_changes"
-        android:textAlignment="center" />
+
+    <ListView
+        android:id="@+id/details_state_changes_listView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/details_view_stats"
+        app:layout_constraintStart_toStartOf="@+id/details_state_changes_header"
+        app:layout_constraintTop_toBottomOf="@+id/details_state_changes_header" />
 
     <Button
         android:id="@+id/details_view_stats"
-        android:layout_width="match_parent"
-        android:layout_height="79dp"
-        android:text="@string/details_view_statistics" />
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/details_view_statistics"
+        app:layout_constraintBottom_toTopOf="@+id/back_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_state_changes_listView" />
 
     <Button
         android:id="@+id/back_button"
-        android:layout_width="match_parent"
-        android:layout_height="63dp"
-        android:text="@string/back" />
-</LinearLayout>
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_view_stats" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
