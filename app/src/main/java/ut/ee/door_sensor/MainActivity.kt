@@ -61,19 +61,18 @@ class MainActivity : AppCompatActivity() {
         doors_listview.adapter = myCustomAdapter
     }
 
-    /**
-     * TODO MOVE THIS ASYNCTASK, when it is in onCreate, then the response wont come fast enough and the items are not displayed
-     */
+
     private fun getDoors() {
         // Read from the database
-        db.addValueEventListener(object: ValueEventListener {
+        db.addValueEventListener(object : ValueEventListener {
+
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 Log.i(TAG, "onDataChange!")
 
                 for (ds in dataSnapshot.children) {
-                    val door = ds.getValue(Door::class.java!!)
+                    val door = ds.getValue(Door::class.java)
                     doorsList.add(door as Door)
                 }
                 myCustomAdapter.notifyDataSetChanged()
