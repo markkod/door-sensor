@@ -9,6 +9,7 @@ import java.util.*
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.AnyChart
+import com.anychart.core.Chart
 import java.text.SimpleDateFormat
 
 
@@ -42,11 +43,21 @@ class DoorStatisticsActivity : AppCompatActivity() {
     private fun addDoorDetails(door: Door) {
         if (door != null) {
             statistics_door_name.text = door.name
-            loadChart()
+            
+            myThread.start()
+
         }
     }
 
-    private fun loadChart() {
+    private val myThread = Thread {
+        val chart = loadChart() // We want image loading to run in the background
+
+        this.runOnUiThread {
+            statistics_chart.setChart(chart)
+        }
+    }
+
+    private fun loadChart(): Chart {
         val column = AnyChart.column()
         val data: MutableList<DataEntry> = mutableListOf()
 
@@ -74,7 +85,7 @@ class DoorStatisticsActivity : AppCompatActivity() {
 
 
         column.data(data)
-        statistics_chart.setChart(column)
+        return column
     }
 
 

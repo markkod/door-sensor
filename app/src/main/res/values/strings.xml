@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">door_sensor</string>
+    <string name="app_name">Door Sensor</string>
     <string name="door_name">Test</string>
     <string name="back">Back</string>
     <string name="details_door_name">DOOR NAME</string>
