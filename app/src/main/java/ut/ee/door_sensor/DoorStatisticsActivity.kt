@@ -43,7 +43,7 @@ class DoorStatisticsActivity : AppCompatActivity() {
     private fun addDoorDetails(door: Door) {
         if (door != null) {
             statistics_door_name.text = door.name
-            
+
             myThread.start()
 
         }
@@ -83,6 +83,8 @@ class DoorStatisticsActivity : AppCompatActivity() {
             data.add(ValueDataEntry(date.toString(), count))
         }
 
+        column.xAxis(0).title("Date")
+        column.yAxis(0).title("Number of times opened/closed")
 
         column.data(data)
         return column
