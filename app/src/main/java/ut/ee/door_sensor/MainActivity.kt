@@ -1,14 +1,20 @@
 package ut.ee.door_sensor
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.RingtoneManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,6 +24,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         fetchDbData()
         initBroadcastReceiver()
         initDoorsList()
+        Log.i(TAG, "TOKEN: ${FirebaseInstanceId.getInstance().token}")
     }
 
     override fun onDestroy() {
@@ -105,8 +113,8 @@ class MainActivity : AppCompatActivity() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 Log.i(TAG, "RECEIVED BROADCAST")
                 if (notificationsEnabled) {
-                    val notificationText = intent?.getStringExtra("notification_text")
-                    Toast.makeText(applicationContext, notificationText, Toast.LENGTH_SHORT).show()
+                    displayNotification(intent)
+                    //sendNotification(intent?.getStringExtra("notification_text"))
                 }
             }
 
@@ -114,6 +122,11 @@ class MainActivity : AppCompatActivity() {
         LocalBroadcastManager
             .getInstance(this)
             .registerReceiver(broadcastReceiver, IntentFilter("INTENT_FILTER"))
+    }
+
+    private fun displayNotification(intent: Intent?) {
+        val notificationText = intent?.getStringExtra("notification_text")
+        Toast.makeText(applicationContext, notificationText, Toast.LENGTH_SHORT).show()
     }
 
 
@@ -154,16 +167,15 @@ class MainActivity : AppCompatActivity() {
     private fun fetchNotificationsState() {
         val documentReference = notificationsDb.collection("notifications")
             .document("state")
-       documentReference.get().addOnSuccessListener { document ->
-           setNotificationsState(document.data!!["enabled"].toString())
-       }
+        documentReference.get().addOnSuccessListener { document ->
+            setNotificationsState(document.data!!["enabled"].toString())
+        }
     }
 
     private fun setNotificationsState(state: String) {
         Log.i(TAG, "Notifications state from DB: $state")
         notificationsEnabled = state == "true"
     }
-
 
 
     fun startDetailsActivity(door: Door, position: Int) {
