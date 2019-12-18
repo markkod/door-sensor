@@ -43,7 +43,7 @@ class MessagingService : FirebaseMessagingService() {
         Log.i(TAG, "Received data: $data")
         val doorState = data["doorState"]
         val doorName = data["doorName"]
-        return "Door: $doorName is now ${getStateText(doorState)}"
+        return "$doorName is now ${getStateText(doorState)}"
     }
 
     private fun getStateText(state: String?): String {

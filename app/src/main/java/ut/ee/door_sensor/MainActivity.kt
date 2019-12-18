@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.Ringtone
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -47,13 +48,6 @@ class MainActivity : AppCompatActivity() {
         initBroadcastReceiver()
         initDoorsList()
         Log.i(TAG, "TOKEN: ${FirebaseInstanceId.getInstance().token}")
-    }
-
-    override fun onDestroy() {
-        LocalBroadcastManager
-            .getInstance(this)
-            .unregisterReceiver(broadcastReceiver)
-        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -111,10 +105,8 @@ class MainActivity : AppCompatActivity() {
     private fun initBroadcastReceiver() {
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                Log.i(TAG, "RECEIVED BROADCAST")
                 if (notificationsEnabled) {
-                    displayNotification(intent)
-                    //sendNotification(intent?.getStringExtra("notification_text"))
+                    sendNotification(intent?.getStringExtra("notification_text"))
                 }
             }
 
@@ -124,9 +116,31 @@ class MainActivity : AppCompatActivity() {
             .registerReceiver(broadcastReceiver, IntentFilter("INTENT_FILTER"))
     }
 
-    private fun displayNotification(intent: Intent?) {
-        val notificationText = intent?.getStringExtra("notification_text")
-        Toast.makeText(applicationContext, notificationText, Toast.LENGTH_SHORT).show()
+
+    // https://medium.com/@fdeng2014/using-fcm-to-create-android-push-notification-kotlin-a100c2fb131
+    private fun sendNotification(text: String?) {
+        Log.i(TAG, "Trying to send push notification: $text")
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        val channelId = "notifications"
+        val defaultSoundUrl = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+            .setContentTitle("Door sensor")
+            .setContentText(text)
+            .setAutoCancel(true)
+            .setSound(defaultSoundUrl)
+            .setContentIntent(pendingIntent)
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, "Channel title", NotificationManager.IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(channel)
+        }
+        if (this.notificationsEnabled) {
+            notificationManager.notify(0, notificationBuilder.build())
+        }
     }
 
 
