@@ -1,17 +1,21 @@
 package ut.ee.door_sensor
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Adapter
 import android.widget.ArrayAdapter
 import android.widget.ListAdapter
 import android.widget.ListView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.door_details.*
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class DoorDetailsActivity : AppCompatActivity() {
@@ -40,19 +44,25 @@ class DoorDetailsActivity : AppCompatActivity() {
 
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
     fun generateDateStrings(): Array<Any> {
+        val datePattern = "yyyy-MM-dd HH:mm:ss.SSS"
+
         var timestampArray: MutableList<Long> = mutableListOf()
         timestampArray.addAll(door?.lastOpened!!.values)
 
-        var stringArray: MutableList<Any> = mutableListOf()
+        var stringArray: MutableList<String> = mutableListOf()
 
         for (ts in timestampArray) {
-            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+            val sdf = SimpleDateFormat(datePattern)
             val date = Date(ts)
             val formattedDate = sdf.format(date)
 
-            stringArray.add(formattedDate.toString())
+            stringArray.add(formattedDate)
         }
+
+        Collections.sort(stringArray, StringDateComparator())
 
         return stringArray.toTypedArray()
     }
@@ -88,5 +98,12 @@ class DoorDetailsActivity : AppCompatActivity() {
         position = intent.getIntExtra("position", -1)
         door = Gson().fromJson(doorJson, Door::class.java)
         Log.i(TAG,"Received door: $door with position: $position")
+    }
+}
+
+internal class StringDateComparator : Comparator<String> {
+    var dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+    override fun compare(lhs: String, rhs: String): Int {
+        return dateFormat.parse(lhs)!!.compareTo(dateFormat.parse(rhs))
     }
 }
