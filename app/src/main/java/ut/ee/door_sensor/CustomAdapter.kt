@@ -42,6 +42,8 @@ class CustomAdapter(var objects: MutableList<Door>, var mainActivity: MainActivi
     }
 
     override fun getItemId(position: Int): Long {
-        return objects[position].id!!.toLong()
+        return if (objects[position].id != null) {
+            objects[position].id!!.toLong()
+        } else 0L
     }
 }
